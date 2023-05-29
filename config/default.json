@@ -1,0 +1,4 @@
+{
+    "mongoURL": "mongodb+srv://doddannachawan:doddannachawan@cluster0.1askunn.mongodb.net/?retryWrites=true&w=majority",
+    "jwtScrete": "MyScrete"
+}
