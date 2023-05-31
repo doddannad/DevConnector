@@ -261,33 +261,37 @@ router.delete("/education/:edu_id", [authMiddleware, []], async (req, res) => {
 // @access Public
 // @method get
 router.get("/github/:username", async (req, res) => {
-  const options = {
-    uri: `https://api.github.com/users/${
-      req.params.username
-    }/repos/per_page=5&sort=created:asc&client_id=${config.get(
-      "github_client"
-    )}&client_screte=${config.get("github_screte")}`,
-    method: "get",
-    headers: { "user-agent": "node.js" },
-  };
-  request(options, (error, response, body) => {
-    if (error) {
-      return res.json({ status: 400, errors: error });
-    }
+  try {
+    const options = {
+      uri: `https://api.github.com/users/${
+        req.params.username
+      }/repos?per_page=5&sort=created:asc&client_id=${config.get(
+        "github_client"
+      )}&client_secret=${config.get("github_scret")}`,
+      method: "GET",
+      headers: { "user-agent": "node.js" },
+    };
+    request(options, (error, response, body) => {
+      if (error) {
+        return res.json({ status: 400, errors: error });
+      }
 
-    if (response.statusCode !== 200) {
+      if (response.statusCode !== 200) {
+        return res.json({
+          status: 404,
+          msg: "",
+          errors: [{ msg: "Git repos not found" }],
+        });
+      }
       return res.json({
-        status: 404,
-        msg: "",
-        errors: [{ msg: "Git repos not found" }],
+        status: 200,
+        msg: "success",
+        repos: JSON.parse(body),
       });
-    }
-    res.json({
-      status: 200,
-      msg: "success",
-      body: JSON.parse(body),
     });
-  });
+  } catch (error) {
+    res.send({ status: 500, msg: "failed", errors: [{ msg: error.message }] });
+  }
 });
 
 module.exports = router;

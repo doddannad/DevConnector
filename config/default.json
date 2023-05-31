@@ -2,5 +2,5 @@
     "mongoURL": "mongodb+srv://doddannachawan:doddannachawan@cluster0.1askunn.mongodb.net/?retryWrites=true&w=majority",
     "jwtScrete": "MyScrete",
     "github_client": "6607542b0dc551ba1141",
-    "github_screte": "6d985edc1dfc2957c97c551c4080940d1b0c6cb7"
+    "github_scret": "6d985edc1dfc2957c97c551c4080940d1b0c6cb7"
 }
