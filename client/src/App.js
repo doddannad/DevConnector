@@ -13,6 +13,7 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import ProfilesPage from "./pages/ProfilesPage";
 import ProfilePage from "./pages/ProfilePage";
+import Error from "./components/Error";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/" exact Component={LandingPage} />
         </Routes>
         <section className="container">
+          <Error />
           <Routes>
             <Route path="/register" exact Component={RegisterPage} />
             <Route path="/login" exact Component={LoginPage} />

@@ -11,6 +11,7 @@ export const registerApi = createApi({
         method: "POST",
         body: { name, email, password },
       }),
+      onError: (error) => console.log(error),
     }),
   }),
 });
