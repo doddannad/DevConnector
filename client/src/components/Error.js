@@ -7,62 +7,51 @@ const Error = () => {
   const dispatch = useDispatch();
 
   const errors = useSelector((state) => state.errors);
-
   const [startRemove, setStartRemove] = useState(false);
   const [showErrors, setShowErrors] = useState([]);
-  console.log("startRemove ", startRemove);
 
   // remove errors one by one
   const clearError = useCallback(
     async (id) => {
       // remove from main state
       dispatch(removeError(id));
+      let updatedErrors = [...errors];
+      const removeIndex = updatedErrors.map((e) => e.id).indexOf(id);
+      updatedErrors.splice(removeIndex, 1);
+      setShowErrors(updatedErrors);
     },
-    [dispatch]
+    [dispatch, errors]
   );
   // handle remove errors
   const handleRemoveErrors = useCallback(async () => {
-    let removeIndex;
-    let updatedErrors;
+    console.log("===handleRemoveErrors===");
     for (let i = 0; i < errors.length; i++) {
-      removeIndex = i;
       const id = errors[i].id;
       await new Promise((resolve) => setTimeout(resolve, 1000));
       clearError(id);
-      updatedErrors = [...showErrors];
-      updatedErrors.splice(removeIndex, 1);
-      setShowErrors(updatedErrors);
     }
-  }, [errors, showErrors, clearError]);
+  }, [errors, clearError]);
 
   useEffect(() => {
-    startRemove && errors.length > 0 && handleRemoveErrors();
-    startRemove && errors.length < 1 && setStartRemove(false);
+    startRemove && handleRemoveErrors();
+    errors.length < 1 && setStartRemove(false);
     return () => {};
   }, [startRemove, errors, handleRemoveErrors]);
 
   // display errors one by one
 
   const handleDisplayErrors = useCallback(async () => {
+    console.log("handleDisplayErrors ===");
     let myElements = [];
     for (let i = 0; i < errors.length; i++) {
       const err = errors[i];
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      myElements.push(
-        <div
-          key={i}
-          className={`alert alert-${err.type}`}
-          onClick={() => clearError(err.id)}
-        >
-          {err.msg}
-        </div>
-      );
+      myElements.push(err);
       setShowErrors([...myElements]);
-      if (i === errors.length - 1) {
-        setStartRemove(true);
-      }
     }
-  }, [errors, clearError]);
+    console.log("start remove");
+    setStartRemove(true);
+  }, [errors]);
 
   useEffect(() => {
     !startRemove && errors.length > 0 && handleDisplayErrors();
@@ -74,7 +63,15 @@ const Error = () => {
       {showErrors !== null && showErrors.length > 0 && (
         <div>
           {showErrors.map((err, i) => {
-            return <div key={i}>{err}</div>;
+            return (
+              <div
+                key={i}
+                className={`alert alert-${err.type}`}
+                onClick={() => clearError(err.id)}
+              >
+                {err.msg}
+              </div>
+            );
           })}
         </div>
       )}
